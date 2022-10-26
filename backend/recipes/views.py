@@ -1,19 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
+
+from backend.settings import FOODGRAM, SHOPPING_CART
 
 from .filters import IngredientSearchFilter, RecipeFilter
-from .models import (Favorite, Ingredient, IngredientRecipe,
-                     Recipe, Tag, ShoppingCart)
+from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                     ShoppingCart, Tag)
 from .pagination import RecipePagination
 from .permissions import IsOwnerOrReadOnly
-from .serializers import (IngredientSerializer, RecipeSerializer,
-                          ShoppingCartSerializer, RecipeWriteSerializer,
-                          FavoriteRecipeSerializer, TagSerializer,)
+from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
+                          RecipeSerializer, RecipeWriteSerializer,
+                          ShoppingCartSerializer, TagSerializer)
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -92,16 +94,33 @@ class RecipeViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
         """скачивает список ингридиентов из рецептов в корзине"""
+        shopping_dict = {}
         ingredients = IngredientRecipe.objects.filter(
-            recipe__shoppingcart__user=request.user).values(
-            'ingredient__name', 'ingredient__measurement_unit', 'amount'
+            recipe__in=request.user.shopping_cart.values('recipe')
+        ).select_related('ingredient')
+        for obj in ingredients:
+            ingredient = obj.ingredient.name
+            if ingredient not in shopping_dict:
+                shopping_dict[ingredient] = {
+                    'measurement_unit': obj.ingredient.measurement_unit,
+                    'amount': obj.amount
+                }
+            else:
+                shopping_dict[ingredient]['amount'] += obj.amount
+        download_cart = SHOPPING_CART.format(username=request.user.username)
+        for ingredient in shopping_dict:
+            download_cart += (
+                f'{ingredient} '
+                f'({shopping_dict[ingredient]["measurement_unit"]}) '
+                f'- {shopping_dict[ingredient]["amount"]}\n'
+            )
+        download_cart += FOODGRAM
+        response = HttpResponse(
+            download_cart,
+            content_type='text/plain;charset=UTF-8',
         )
-        shopping_cart = '\n'.join([
-            f'{ingredient["ingredient__name"]} - {ingredient["amount"]} '
-            f'{ingredient["ingredient__measurement_unit"]}'
-            for ingredient in ingredients
-        ])
-        filename = 'shopping_cart.txt'
-        response = HttpResponse(shopping_cart, content_type='text/plain')
-        response['Content-Disposition'] = f'attachment; filename={filename}'
+        response['Content-Disposition'] = (
+            'attachment;'
+            'filename="shopping_cart.txt"'
+        )
         return response

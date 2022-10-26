@@ -1,7 +1,6 @@
 from colorfield.fields import ColorField
 from django.core import validators
 from django.db import models
-
 from users.models import User
 
 
@@ -127,11 +126,13 @@ class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
+        related_name='ingredient_recipe',
         verbose_name='Ингредиент'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='ingredient_recipe',
         verbose_name='Рецепт'
     )
     amount = models.PositiveSmallIntegerField(
@@ -186,13 +187,13 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='shoppingcard',
+        related_name='shopping_cart',
         verbose_name='Пользователь'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='shoppingcart',
+        related_name='shopping_cart',
         verbose_name='рецепт'
     )
 
