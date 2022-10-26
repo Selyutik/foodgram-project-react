@@ -27,7 +27,7 @@ SECRET_KEY = 'i!0y21dyni5ah7&m@46q#1@0m0k7tv-fdfptw8dbb43%q(v@12'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'recipes',
-    'users',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     'djoser',
+    'recipes',
+    'users',
+    'colorfield',
 ]
 
 MIDDLEWARE = [
@@ -126,21 +128,25 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 AUTH_USER_MODEL = 'users.User'
 
 EMPTY_VALUE = _('-пусто-')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 6,
-
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ]
 }
 
 DJOSER = {
@@ -160,3 +166,6 @@ DJOSER = {
         'user': ['rest_framework.permissions.AllowAny'],
     }
 }
+
+FOODGRAM = 'Foodgram'
+SHOPPING_CART = 'Привет, {username}! Вот твой список покупок:'
