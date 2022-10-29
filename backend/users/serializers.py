@@ -1,8 +1,8 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from recipes.models import Recipe
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
+from recipes.models import Recipe
 from .models import Follow, User
 
 
@@ -64,7 +64,10 @@ class FollowSerializer(serializers.ModelSerializer):
     """
     is_subscribed = serializers.SerializerMethodField(read_only=True)
     recipes = serializers.SerializerMethodField(read_only=True)
-    recipes_count = serializers.SerializerMethodField(read_only=True)
+    recipes_count = serializers.SerializerMethodField(
+        source='recipes_set.count',
+        read_only=True
+    )
 
     class Meta:
         model = User
@@ -97,10 +100,6 @@ class FollowSerializer(serializers.ModelSerializer):
         context = {'request': request}
         return FollowRecipeSerializer(recipes, many=True,
                                       context=context).data
-
-    @staticmethod
-    def get_recipes_count(obj):
-        return obj.recipes.count()
 
 
 class UserFollowSerializer(serializers.ModelSerializer):

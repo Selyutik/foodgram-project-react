@@ -1,5 +1,6 @@
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+
 from users.serializers import CustomUserSerializer
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
@@ -43,15 +44,15 @@ class RecipeSerializer(serializers.ModelSerializer):
                   'name', 'image', 'text', 'cooking_time',
                   'is_favorited', 'is_in_shopping_cart')
 
-    def get_ingredients(self, obj):
-        ingredients = IngredientRecipe.objects.filter(recipe=obj)
-        return IngredientQuantitySerializer(ingredients, many=True).data
+    def get_ingredients(self, recipe):
+        ingredient_recipe = recipe.ingredient_recipe.all()
+        return IngredientQuantitySerializer(ingredient_recipe, many=True).data
 
-    def get_is_favorited(self, obj):
+    def get_is_favorited(self, recipe):
         request = self.context.get('request')
         if request.user.is_authenticated:
             return Favorite.objects.filter(user=request.user,
-                                           recipe=obj).exists()
+                                           recipe=recipe).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
@@ -127,13 +128,17 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
             amount = ingredient['amount']
-            IngredientRecipe.objects.create(
-                recipe=recipe, ingredient=ingredient_id, amount=amount
-            )
+            objs = [
+                IngredientRecipe(
+                    recipe=recipe,
+                    ingredient=ingredient_id,
+                    amount=amount
+                )
+            ]
+            IngredientRecipe.objects.bulk_create(objs)
 
     def create_tags(self, tags, recipe):
-        for tag in tags:
-            recipe.tags.add(tag)
+        recipe.tags.set(tags)
 
     def create(self, validated_data):
         author = self.context.get('request').user

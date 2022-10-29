@@ -1,6 +1,7 @@
 from colorfield.fields import ColorField
 from django.core import validators
 from django.db import models
+
 from users.models import User
 
 
@@ -8,7 +9,6 @@ class Tag(models.Model):
     name = models.CharField(
         max_length=40,
         unique=True,
-        null=False,
         verbose_name='Название Тега',
     )
     color = ColorField(default='#FF0000')
@@ -30,8 +30,6 @@ class Ingredient(models.Model):
     name = models.CharField(
         max_length=100,
         unique=True,
-        blank=False,
-        null=False,
         verbose_name='Название Ингредиента'
     )
     measurement_unit = models.CharField(
@@ -58,8 +56,6 @@ class Recipe(models.Model):
     name = models.CharField(
         max_length=200,
         unique=True,
-        blank=False,
-        null=False,
         verbose_name='Название рецепта'
     )
     text = models.TextField(
@@ -83,7 +79,7 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         validators=(
             validators.MinValueValidator(
-                0, message='Укажите время приготовления блюда'),
+                1, message='Укажите время приготовления блюда'),
         ),
         verbose_name='Время приготовления'
     )

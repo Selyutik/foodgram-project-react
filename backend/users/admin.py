@@ -15,7 +15,7 @@ class UserAdmin(admin.ModelAdmin):
         'role',
     )
     list_filter = ('email', 'username')
-    search_fields = ('username',)
+    search_fields = ('username', 'email', 'first_name')
     empty_value_display = settings.EMPTY_VALUE
 
     def get_form(self, request, obj=None, change=False, **kwargs):

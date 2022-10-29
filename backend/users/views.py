@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from backend.pagination import LimitPageNumberPaginator
-
 from .models import Follow, User
 from .serializers import FollowSerializer, UserFollowSerializer
 
