@@ -21,3 +21,4 @@ def shopping_list_txt(shopping_dict, user):
             'filename="shopping_cart.txt"'
         )
     return response
+
