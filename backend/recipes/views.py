@@ -79,6 +79,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return self.create_favorite(request, pk, ShoppingCartSerializer)
         if request.method == 'DELETE':
             return self.delete_from_favorite(pk, request.user, ShoppingCart)
+        return False
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])

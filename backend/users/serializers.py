@@ -47,6 +47,7 @@ class CustomUserSerializer(UserSerializer):
         if request.user.is_authenticated:
             return Follow.objects.filter(user=request.user,
                                          author=obj).exists()
+        return False
 
 
 class FollowRecipeSerializer(serializers.ModelSerializer):
@@ -87,6 +88,7 @@ class FollowSerializer(serializers.ModelSerializer):
         if request.user.is_authenticated:
             return Follow.objects.filter(user=request.user,
                                          following=obj).exists()
+        return False
 
     def get_recipes(self, obj):
         request = self.context.get('request')
