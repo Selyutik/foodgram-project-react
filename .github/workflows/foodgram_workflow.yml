@@ -59,7 +59,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: selyutik/infra:latest
+          tags: selyutik/backend:latest
 
   # deploy:
   #   runs-on: ubuntu-latest
