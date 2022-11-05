@@ -119,7 +119,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 )
             tags_list.append(tag)
 
-        cooking_time = self.initial_data.get('cooking_time') # type: ignore
+        cooking_time = self.initial_data.get('cooking_time')  # type: ignore
         if int(cooking_time) <= 0:
             raise serializers.ValidationError(
                 'Время приготовления должно быть больше 0!'
