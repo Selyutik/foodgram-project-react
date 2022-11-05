@@ -91,12 +91,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'ingredient__name', 'ingredient__measurement_unit', 'amount'
         )
         for obj in ingredients:
-            ingredient = obj.ingredient.name
+            ingredient = obj['ingredient__name']
             if ingredient not in shopping_dict:
                 shopping_dict[ingredient] = {
-                    'measurement_unit': obj.ingredient.measurement_unit,
-                    'amount': obj.amount
+                    'measurement_unit': obj['ingredient__measurement_unit'],
+                    'amount': obj['amount']
                 }
             else:
-                shopping_dict[ingredient]['amount'] += obj.amount
+                shopping_dict[ingredient]['amount'] += obj['amount']
         return shopping_list_txt(shopping_dict, request.user)

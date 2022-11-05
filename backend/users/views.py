@@ -27,9 +27,9 @@ class UserFollowApiView(views.APIView):
     permission_classes = [IsAuthenticated, ]
 
     def post(self, request, id):
-        data = {'user': request.user.id, 'following': id}
+        data = {'user': request.user.id, 'author': id}
         serializer = UserFollowSerializer(
-            data=data,
+            data=data,  # type: ignore
             context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
@@ -43,7 +43,7 @@ class UserFollowApiView(views.APIView):
         user = request.user
         following = get_object_or_404(User, id=id)
         follow = get_object_or_404(
-            Follow, user=user, following=following
+            Follow, user=user, author=following
         )
         follow.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

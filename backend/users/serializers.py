@@ -44,8 +44,8 @@ class CustomUserSerializer(UserSerializer):
         Подписан ли пользователь на автора.
         """
         request = self.context.get('request')
-        if request.user.is_authenticated:
-            return Follow.objects.filter(user=request.user,
+        if request.user.is_authenticated:  # type: ignore
+            return Follow.objects.filter(user=request.user,  # type: ignore
                                          author=obj).exists()
         return False
 
@@ -65,10 +65,7 @@ class FollowSerializer(serializers.ModelSerializer):
     """
     is_subscribed = serializers.SerializerMethodField(read_only=True)
     recipes = serializers.SerializerMethodField(read_only=True)
-    recipes_count = serializers.SerializerMethodField(
-        source='recipes_set.count',
-        read_only=True
-    )
+    recipes_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -85,9 +82,9 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        if request.user.is_authenticated:
-            return Follow.objects.filter(user=request.user,
-                                         following=obj).exists()
+        if request.user.is_authenticated:  # type: ignore
+            return Follow.objects.filter(user=request.user,  # type: ignore
+                                         author=obj).exists()
         return False
 
     def get_recipes(self, obj):
@@ -102,6 +99,10 @@ class FollowSerializer(serializers.ModelSerializer):
         context = {'request': request}
         return FollowRecipeSerializer(recipes, many=True,
                                       context=context).data
+
+    @staticmethod
+    def get_recipes_count(obj):
+        return obj.recipes.count()
 
 
 class UserFollowSerializer(serializers.ModelSerializer):
@@ -120,7 +121,7 @@ class UserFollowSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        following = data['following']
+        following = data['author']
         if request.user == following:
             raise serializers.ValidationError(
                 'Вы не можете подписаться на себя!'
@@ -131,4 +132,4 @@ class UserFollowSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         context = {'request': request}
         return FollowSerializer(
-            instance.following, context=context).data
+            instance.author, context=context).data

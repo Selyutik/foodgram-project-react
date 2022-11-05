@@ -5,6 +5,11 @@ services:
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+
   frontend:
     build:
       context: ../frontend
@@ -18,7 +23,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - frontend
+      - backend
     volumes:
       - static_value:/var/html/static
       - media_value:/var/html/media

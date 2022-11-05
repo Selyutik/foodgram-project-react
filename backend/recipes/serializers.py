@@ -36,6 +36,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer(read_only=True)
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -49,17 +50,17 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, recipe):
         request = self.context.get('request')
-        if request.user.is_authenticated:
-            return Favorite.objects.filter(user=request.user,
-                                           recipe=recipe).exists()
-        return False
+        if not request or request.user.is_anonymous:
+            return False
+        return Favorite.objects.filter(user=request.user,
+                                       recipe=recipe).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
-        if request.user.is_authenticated:
-            return ShoppingCart.objects.filter(user=request.user,
-                                               recipe=obj).exists()
-        return False
+        if not request or request.user.is_anonymous:
+            return False
+        return ShoppingCart.objects.filter(user=request.user,
+                                           recipe=obj).exists()
 
 
 class IngredientWriteSerializer(serializers.ModelSerializer):
@@ -87,7 +88,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                   'author', 'name', 'text', 'cooking_time')
 
     def validate(self, data):
-        ingredients = self.initial_data.get('ingredients')
+        ingredients = self.initial_data.get('ingredients')  # type: ignore
         if not ingredients:
             raise serializers.ValidationError(
                 'Нужно выбрать хотя бы один ингредиент!'
@@ -105,7 +106,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'Укажите хотя бы один ингредиент!'
                 )
-        tags = self.initial_data.get('tags')
+        tags = self.initial_data.get('tags')  # type: ignore
         if not tags:
             raise serializers.ValidationError(
                 'Нужно выбрать хотя бы один тэг!'
@@ -142,7 +143,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         recipe.tags.set(tags)
 
     def create(self, validated_data):
-        author = self.context.get('request').user
+        author = self.context.get('request').user  # type: ignore
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(author=author, **validated_data)
