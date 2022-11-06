@@ -2,7 +2,7 @@
 Foodgram - Продуктовый помощник. Сервис позволяет публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список "Избранное", а перед походом в магазин - скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
 ## Технологический стек
-![Django-app workflow](https://github.com/selyutik/foodgram-project-react/actions/workflows/backend.yml/badge.svg)
+![Django-app workflow](https://github.com/selyutik/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat&logo=Python&logoColor=56C0C0&color=008080)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat&logo=Django&logoColor=56C0C0&color=008080)](https://www.djangoproject.com/)
 [![Django REST Framework](https://img.shields.io/badge/-Django%20REST%20Framework-464646?style=flat&logo=Django%20REST%20Framework&logoColor=56C0C0&color=008080)](https://www.django-rest-framework.org/)
@@ -17,6 +17,7 @@ Foodgram - Продуктовый помощник. Сервис позволя�
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat&logo=Yandex.Cloud&logoColor=56C0C0&color=008080)](https://cloud.yandex.ru/)
 
 ### Workflow
+* tests - Проверка кода на соответсвие PEP8
 * build_and_push_to_docker_hub - Сборка и доставка докер-образов на Docker Hub
 * deploy - Автоматический деплой проекта на боевой сервер. Выполняется копирование файлов из репозитория на сервер:
 * send_message - Отправка уведомления в Telegram
@@ -43,7 +44,7 @@ git add .
 git commit -m "..."
 git push
 ```
-запускается набор блоков команд jobs (см. файл [backend.yml](https://github.com/selyutik/foodgram-project-react/blob/master/.github/workflows/backend.yml), т.к. команда `git push` является триггером workflow проекта.  
+запускается набор блоков команд jobs (см. файл [backend.yml](https://github.com/selyutik/foodgram-project-react/blob/master/.github/workflows/foodgram_workflow.yml), т.к. команда `git push` является триггером workflow проекта.  
 
 Клонируйте репозиторий и перейдите в него в командной строке:
 ```
