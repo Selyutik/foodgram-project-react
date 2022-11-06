@@ -44,7 +44,7 @@ git add .
 git commit -m "..."
 git push
 ```
-запускается набор блоков команд jobs (см. файл [backend.yml](https://github.com/selyutik/foodgram-project-react/blob/master/.github/workflows/foodgram_workflow.yml), т.к. команда `git push` является триггером workflow проекта.  
+запускается набор блоков команд jobs (см. файл [foodgram_workflow.yml](https://github.com/selyutik/foodgram-project-react/blob/master/.github/workflows/foodgram_workflow.yml), т.к. команда `git push` является триггером workflow проекта.  
 
 Клонируйте репозиторий и перейдите в него в командной строке:
 ```
@@ -186,7 +186,7 @@ Email: ```selyut.kat@gmail.ru```
 - ```api/recipes/``` - Получение списка с рецептами и публикация рецептов (GET, POST).
 - ```api/recipes/{id}``` - Получение, изменение, удаление рецепта с соответствующим id (GET, PUT, PATCH, DELETE).
 - ```api/recipes/{id}/shopping_cart/``` - Добавление рецепта с соответствующим id в список покупок и удаление из списка (GET, DELETE).
-- ```api/recipes/download_shopping_cart/``` - Скачать файл со списком покупок TXT (в дальнейшем появиться поддержка PDF) (GET).
+- ```api/recipes/download_shopping_cart/``` - Скачать файл со списком покупок TXT (в дальнейшем появится поддержка PDF) (GET).
 - ```api/recipes/{id}/favorite/``` - Добавление рецепта с соответствующим id в список избранного и его удаление (GET, DELETE).
 
 #### Операции с пользователями:
