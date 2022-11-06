@@ -75,7 +75,6 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }} 
         script: |
           sudo docker pull selyutik/backend:latest
-          cd ../infra
           sudo docker-compose stop
           sudo docker-compose rm backend
           touch .env
