@@ -75,6 +75,7 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }} 
         script: |
           sudo docker pull selyutik/backend:latest
+          rm .env
           touch .env
           echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
           echo DB_NAME=${{ secrets.DB_NAME }} >> .env
@@ -82,7 +83,7 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-          echo DOMAIN_NAME=http://84.201.138.112
+          echo DOMAIN_NAME=http://84.201.138.112 >> .env
           sudo docker-compose -p infra up -d
 
   send_message:
