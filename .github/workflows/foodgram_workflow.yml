@@ -82,6 +82,7 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo DOMAIN_NAME=http://84.201.138.112
           sudo docker-compose -p infra up -d
 
   send_message:
