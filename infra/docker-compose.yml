@@ -2,6 +2,9 @@ version: '3.8'
 services:
   backend:
     image: selyutik/backend:v12.11.2022
+    build: 
+      context: ../backend/
+      dockerfile: Dockerfile
     restart: always
     volumes:
       - static_value:/app/static/
